@@ -32,6 +32,7 @@ namespace Hotel.Controllers
                 {
                     Prenotazione prenotazione = new Prenotazione
                     {
+                        ID = (int)reader["ID"],
                         DataPrenotazione = (DateTime)reader["DataPrenotazione"],
                         NumeroProgressivo = (int)reader["NumeroProgressivo"],
                         Anno = (int)reader["Anno"],
