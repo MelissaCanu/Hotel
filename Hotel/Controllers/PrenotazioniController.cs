@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -429,26 +430,26 @@ public ActionResult Details(int id)
                 connection.Open();
 
                 // Prima elimino tutti i servizi prenotati associati alla prenotazione
-                SqlCommand cmd = new SqlCommand("DELETE FROM ServiziPrenotati WHERE IdPrenotazione = @IdPrenotazione", connection);
-                cmd.Parameters.AddWithValue("@IdPrenotazione", id); // assumendo che 'id' sia l'ID della prenotazione
+                SqlCommand cmd = new SqlCommand("DELETE FROM ServiziPrenotati WHERE IDPrenotazione = @IDPrenotazione", connection);
+                cmd.Parameters.AddWithValue("@IDPrenotazione", id); // assumendo che 'id' sia l'ID della prenotazione
 
                 int rowsAffected = cmd.ExecuteNonQuery();
-                Console.WriteLine($"Eliminati {rowsAffected} servizi prenotati.");
+                Debug.WriteLine($"Eliminati {rowsAffected} servizi prenotati.");
 
                 // Poi elimino la prenotazione
                 cmd = new SqlCommand("DELETE FROM Prenotazioni WHERE ID = @ID", connection);
                 cmd.Parameters.AddWithValue("@ID", id);
                 rowsAffected = cmd.ExecuteNonQuery();
-                Console.WriteLine($"Eliminata {rowsAffected} prenotazione.");
+                Debug.WriteLine($"Eliminata {rowsAffected} prenotazione.");
             }
             catch (SqlException e)
             {
-                Console.WriteLine("SQL Error: " + e.Message);
+                Debug.WriteLine("SQL Error: " + e.Message);
                 return Content("Si è verificato un errore SQL: " + e.Message);
             }
             catch (Exception e)
             {
-                Console.WriteLine("General Error: " + e.Message);
+                Debug.WriteLine("General Error: " + e.Message);
                 return Content("Si è verificato un errore generale: " + e.Message);
             }
             finally
@@ -462,10 +463,10 @@ public ActionResult Details(int id)
 
 
 
-        //********************************** CALCOLO TOTALE + SERVIZI ************************************//
-        //(aggiunta servizi/associazione servizi-prenotazione in ServiziController)
+            //********************************** CALCOLO TOTALE + SERVIZI ************************************//
+            //(aggiunta servizi/associazione servizi-prenotazione in ServiziController)
 
-        public decimal CalcolaImportoTotale(int idPrenotazione)
+            public decimal CalcolaImportoTotale(int idPrenotazione)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString.ToString();
             SqlConnection connection = new SqlConnection(connectionString);
