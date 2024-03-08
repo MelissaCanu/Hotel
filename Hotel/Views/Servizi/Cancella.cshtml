@@ -1,0 +1,41 @@
+﻿@model Hotel.Models.Servizio
+
+@{
+    ViewBag.Title = "Cancella";
+}
+
+<h2>Cancella</h2>
+
+<h3>Sei sicuro di voler cancellare questo servizio?</h3>
+<div>
+    <h4>Servizio</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Descrizione)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descrizione)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Prezzo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Prezzo)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Cancella" class="btn btn-danger" /> |
+            @Html.ActionLink("Indietro", "Index", null, new { @class = "btn btn-light my-2" })
+        </div>
+    }
+</div>

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Hotel.Models.Servizio>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Crea nuovo servizio", "Crea", null, new {@class = "btn btn-success"})
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Descrizione)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Prezzo)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descrizione)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Prezzo)
+            </td>
+            <td>
+                @Html.ActionLink("Modifica", "Modifica", new { id = item.ID }, new {@class = "btn btn-warning"}) 
+                @Html.ActionLink("Cancella", "Cancella", new { id = item.ID }, new {@class = "btn btn-danger"})
+            </td>
+        </tr>
+    }
+</table>

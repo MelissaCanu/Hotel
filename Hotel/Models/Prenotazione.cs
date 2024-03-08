@@ -14,23 +14,25 @@ namespace Hotel.Models
         [Required(ErrorMessage = "Il campo Data Prenotazione è obbligatorio")]
         [Display(Name = "Data Prenotazione")]
         [DataType(DataType.Date)]
-
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DataPrenotazione { get; set; }
         public int NumeroProgressivo { get; set; }
 
         [Required(ErrorMessage = "Il campo Anno è obbligatorio")]
         [Display(Name = "Anno")]
-        [DataType(DataType.Date)]
+        
         public int Anno { get; set; }
 
         [Required(ErrorMessage = "Il campo Periodo Soggiorno Dal è obbligatorio")]
         [Display(Name = "Periodo Soggiorno Dal")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime PeriodoSoggiornoDal { get; set; }
 
         [Required(ErrorMessage = "Il campo Periodo Soggiorno Al è obbligatorio")]
         [Display(Name = "Periodo Soggiorno Al")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime PeriodoSoggiornoAl { get; set; }
 
         [Required(ErrorMessage = "Il campo Caparra è obbligatorio")]
@@ -49,6 +51,11 @@ namespace Hotel.Models
         public string CodiceFiscaleCliente { get; set; }
 
         public int NumeroCamera { get; set; }
+
+        //gestione servizi
+        public List<Servizio> Servizi { get; set; } //aggiungo la lista Servizi 
+        public List<ServizioPrenotato> ServiziPrenotati { get; set; } //aggiungo lista Servizi Prenotati
+
     }
 
 }

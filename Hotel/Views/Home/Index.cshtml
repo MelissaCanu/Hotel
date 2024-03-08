@@ -12,33 +12,39 @@
 <main>
     <section class="row" aria-labelledby="aspnetTitle">
         <h1 id="title">Benvenuti nel gestionale prenotazioni</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
     </section>
 
-    <div class="row">
-        <!-- ... -->
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="prenotazioniTitle">
-            <h2 id="prenotazioniTitle">Prenotazioni</h2>
-            <p>Aggiungi una nuova prenotazione al sistema.</p>
-            <p>@Html.ActionLink("Aggiungi Prenotazione", "AggiungiPrenotazione", "Prenotazioni", null, new { @class = "btn btn-primary" })</p>
-        </section>
-        <section class="col-md-4" aria-labelledby="visualizzaPrenotazioniTitle">
-            <h2 id="visualizzaPrenotazioniTitle">Visualizza Prenotazioni</h2>
-            <p>Visualizza tutte le prenotazioni presenti nel sistema.</p>
-            <p>@Html.ActionLink("Visualizza Prenotazioni", "Index", "Prenotazioni", null, new { @class = "btn btn-primary" })</p>
-        </section>
+    <div class="card-deck">
+        <div class="row">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title" id="visualizzaPrenotazioniTitle">Prenotazioni</h5>
+                    <p class="card-text">Visualizza tutte le prenotazioni presenti nel sistema.</p>
+                    <p>In questa sezione potrai visualizzare i dettagli, modificare e cancellare le prenotazioni.</p>
+                    <p>@Html.ActionLink("Prenotazioni", "Index", "Prenotazioni", null, new { @class = "btn btn-primary" })</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" id="prenotazioniTitle">Nuova Prenotazione</h5>
+                    <p class="card-text">Aggiungi una nuova prenotazione al sistema.</p>
+                    <p>@Html.ActionLink("Aggiungi Prenotazione", "AggiungiPrenotazione", "Prenotazioni", null, new { @class = "btn btn-primary" })</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" id="serviziTitle">Servizi</h5>
+                    <p class="card-text">Gestisci i servizi disponibili per le prenotazioni.</p>
+                    <p>@Html.ActionLink("Gestisci Servizi", "Index", "Servizi", null, new { @class = "btn btn-primary" })</p>
+                </div>
+            </div>
+        </div>
     </div>
     @section Scripts {
         @Scripts.Render("~/bundles/jquery")
 
         <script type="text/javascript">
-    $(document).ready(function () {
+            $(document).ready(function () {
                 setTimeout(function () {
                     $('#success-message').fadeOut('slow');
                 }, 5000);

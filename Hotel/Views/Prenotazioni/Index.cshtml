@@ -6,9 +6,10 @@
 
 <h2>Elenco prenotazioni</h2>
 
-<p>
-    @Html.ActionLink("Aggiungi Prenotazione", "AggiungiPrenotazione")
-</p>
+<div>
+    @Html.ActionLink("Aggiungi Prenotazione", "AggiungiPrenotazione", "Prenotazioni", null, new { @class = "btn btn-primary" })
+</div>
+
 <table class="table">
     <tr>
         <th>@Html.DisplayNameFor(model => model.DataPrenotazione)</th>
@@ -38,9 +39,9 @@
             <td>@Html.DisplayFor(modelItem => item.CodiceFiscaleCliente)</td>
             <td>@Html.DisplayFor(modelItem => item.NumeroCamera)</td>
             <td>
-                @Html.ActionLink("Modifica", "Edit", new { id = item.NumeroProgressivo }) |
-                @Html.ActionLink("Dettagli", "Details", new { id = item.NumeroProgressivo }) |
-                @Html.ActionLink("Cancella", "Delete", new { id = item.NumeroProgressivo })
+                @Html.ActionLink("Modifica", "Edit", new { id = item.NumeroProgressivo }, new { @class = "btn btn-warning my-2" }) 
+                @Html.ActionLink("Dettagli", "Details", new { id = item.NumeroProgressivo }, new { @class = "btn btn-info mb-2" } ) 
+                @Html.ActionLink("Cancella", "Delete", new { id = item.NumeroProgressivo }, new { @class = "btn btn-danger" } ) 
             </td>
         </tr>
     }

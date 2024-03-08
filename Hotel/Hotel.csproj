@@ -124,6 +124,7 @@
     <Compile Include="Controllers\DipendentiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PrenotazioniController.cs" />
+    <Compile Include="Controllers\ServiziController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -189,8 +190,13 @@
     <Content Include="Views\Dipendenti\Login.cshtml" />
     <Content Include="Views\Prenotazioni\AggiungiPrenotazione.cshtml" />
     <Content Include="Views\Prenotazioni\Index.cshtml" />
-    <Content Include="Views\Prenotazioni\Dettagli.cshtml" />
-    <Content Include="Views\Prenotazioni\Cancella.cshtml" />
+    <Content Include="Views\Prenotazioni\Details.cshtml" />
+    <Content Include="Views\Prenotazioni\Delete.cshtml" />
+    <Content Include="Views\Prenotazioni\Edit.cshtml" />
+    <Content Include="Views\Servizi\Index.cshtml" />
+    <Content Include="Views\Servizi\Crea.cshtml" />
+    <Content Include="Views\Servizi\Modifica.cshtml" />
+    <Content Include="Views\Servizi\Cancella.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
