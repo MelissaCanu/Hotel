@@ -71,39 +71,25 @@
             @Html.DisplayFor(model => model.NumeroCamera)
         </dd>
 
-        <h4>Servizi Prenotati</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Descrizione</th>
-                    <th>Quantità</th>
-                    <th>Prezzo</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var servizio in ViewBag.ServiziPrenotati)
-                {
-                    <tr>
-                        <td>@servizio.Data.ToShortDateString()</td>
-                        <td>@servizio.Servizio.Descrizione</td>
-                        <td>@servizio.Quantita</td>
-                        <td>@servizio.Prezzo</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <!-- Servizi prenotati-->
+        @foreach (var servizio in ViewBag.ServiziPrenotati)
+        {
+            <dt class="col-sm-2">Data</dt>
+            <dd class="col-sm-10">@servizio.Data.ToShortDateString()</dd>
 
-        <h4>Totale</h4>
+            <dt class="col-sm-2">Descrizione</dt>
+            <dd class="col-sm-10">@servizio.Servizio.Descrizione</dd>
 
-        @*calcolo totale*@
-        <dt class="col-sm-2">
-            Importo totale
-        </dt>
-        <dd class="col-sm-10">
-            @ViewBag.ImportoTotale
-        </dd>
+            <dt class="col-sm-2">Quantità</dt>
+            <dd class="col-sm-10">@servizio.Quantita</dd>
 
+            <dt class="col-sm-2">Prezzo</dt>
+            <dd class="col-sm-10">@servizio.Prezzo</dd>
+        }
+
+        <!-- Calcolo totale -->
+        <dt class="col-sm-2">Importo totale</dt>
+        <dd class="col-sm-10">@ViewBag.ImportoTotale</dd>
     </dl>
 </div>
 <p>
