@@ -70,23 +70,32 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.NumeroCamera)
         </dd>
-        @*aggiungo servizi prenotati*@
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ServiziPrenotati)
-        </dt>
-        <dd class="col-sm-10">
-            @if (ViewBag.ServiziPrenotati != null)
-            {
-                foreach (var servizio in ViewBag.ServiziPrenotati)
+
+        <h4>Servizi Prenotati</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Descrizione</th>
+                    <th>Quantità</th>
+                    <th>Prezzo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var servizio in ViewBag.ServiziPrenotati)
                 {
-                    <p>@servizio.Data: @servizio.Quantita x @servizio.Prezzo</p>
+                    <tr>
+                        <td>@servizio.Data.ToShortDateString()</td>
+                        <td>@servizio.Servizio.Descrizione</td>
+                        <td>@servizio.Quantita</td>
+                        <td>@servizio.Prezzo</td>
+                    </tr>
                 }
-            }
-            else //se non ci sono servizi prenotati
-            {
-                <p>Nessun servizio prenotato.</p>
-            }
-        </dd>
+            </tbody>
+        </table>
+
+        <h4>Totale</h4>
+
         @*calcolo totale*@
         <dt class="col-sm-2">
             Importo totale
@@ -98,6 +107,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Modifica", "Edit", new { id = Model.NumeroProgressivo }, new { @class = "btn btn-warning my-2" })
+    @Html.ActionLink("Modifica", "Edit", new { id = Model.ID }, new { @class = "btn btn-warning my-2" })
     @Html.ActionLink("Indietro", "Index", null, new { @class = "btn btn-light my-2" })
 </p>

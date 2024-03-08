@@ -143,23 +143,27 @@ namespace Hotel.Controllers
                 cmd.Parameters.AddWithValue("@CodiceFiscaleCliente", prenotazione.CodiceFiscaleCliente);
                 cmd.Parameters.AddWithValue("@NumeroCamera", prenotazione.NumeroCamera);
 
-                int idPrenotazione = (int)cmd.ExecuteScalar();
+                //assegno l'ID all'oggetto prenotazione
+                prenotazione.ID = (int)cmd.ExecuteScalar();
 
-                // Creo un nuovo record nella tabella ServiziPrenotati per ogni servizio selezionato
-                foreach (var idServizio in ServiziPrenotati)
+                if (ServiziPrenotati != null)
                 {
-                    cmd = new SqlCommand(
-                        "INSERT INTO ServiziPrenotati (Data, Quantita, Prezzo, IDPrenotazione, IDServizio) " +
-                        "VALUES (@Data, @Quantita, @Prezzo, @IDPrenotazione, @IDServizio)",
-                        connection);
+                    // Creo un nuovo record nella tabella ServiziPrenotati per ogni servizio selezionato
+                    foreach (var idServizio in ServiziPrenotati)
+                    {
+                        cmd = new SqlCommand(
+                            "INSERT INTO ServiziPrenotati (Data, Quantita, Prezzo, IDPrenotazione, IDServizio) " +
+                            "VALUES (@Data, @Quantita, @Prezzo, @IDPrenotazione, @IDServizio)",
+                            connection);
 
-                    cmd.Parameters.AddWithValue("@Data", DateTime.Now);
-                    cmd.Parameters.AddWithValue("@Quantita", 1);
-                    cmd.Parameters.AddWithValue("@Prezzo", 100);
-                    cmd.Parameters.AddWithValue("@IDPrenotazione", idPrenotazione);
-                    cmd.Parameters.AddWithValue("@IDServizio", idServizio);
+                        cmd.Parameters.AddWithValue("@Data", DateTime.Now);
+                        cmd.Parameters.AddWithValue("@Quantita", 1);
+                        cmd.Parameters.AddWithValue("@Prezzo", 100);
+                        cmd.Parameters.AddWithValue("@IDPrenotazione", prenotazione.ID);
+                        cmd.Parameters.AddWithValue("@IDServizio", idServizio);
 
-                    cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
+                    }
                 }
 
                 return RedirectToAction("Index");
@@ -191,8 +195,8 @@ namespace Hotel.Controllers
             try
             {
                 connection.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Prenotazioni WHERE NumeroProgressivo = @NumeroProgressivo", connection);
-                cmd.Parameters.AddWithValue("@NumeroProgressivo", id);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Prenotazioni WHERE ID = @ID", connection);
+                cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 if (reader.Read())
@@ -272,90 +276,95 @@ namespace Hotel.Controllers
             return RedirectToAction("Index");
         }
 
+       // GET: Prenotazioni/Details/5 + aggiunta servizi
+public ActionResult Details(int id)
+{
+    string connectionString = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString.ToString();
+    SqlConnection connection = new SqlConnection(connectionString);
 
-        // GET: Prenotazioni/Details/5 + aggiunta servizi
-        public ActionResult Details(int id)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString.ToString();
-            SqlConnection connection = new SqlConnection(connectionString);
+    Prenotazione prenotazione = new Prenotazione();
+    List<ServizioPrenotato> serviziPrenotati = new List<ServizioPrenotato>();
+    decimal importoTotale = 0;
 
-            Prenotazione prenotazione = new Prenotazione();
-            List<ServizioPrenotato> serviziPrenotati = new List<ServizioPrenotato>();
-            decimal importoTotale = 0;
+    try
+    {
+        connection.Open();
 
-            try
-            {
-                connection.Open();
-
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Prenotazioni WHERE NumeroProgressivo = @NumeroProgressivo", connection);
-                cmd.Parameters.AddWithValue("@NumeroProgressivo", id);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Prenotazioni WHERE ID = @ID", connection);
+                cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
 
-                if (reader.Read())
-                {
-                    //creo oggetto prenotazione e lo popolo con i dati del reader
-                    prenotazione = new Prenotazione
-                    {
-                        DataPrenotazione = (DateTime)reader["DataPrenotazione"],
-                        NumeroProgressivo = (int)reader["NumeroProgressivo"],
-                        Anno = (int)reader["Anno"],
-                        PeriodoSoggiornoDal = (DateTime)reader["PeriodoSoggiornoDal"],
-                        PeriodoSoggiornoAl = (DateTime)reader["PeriodoSoggiornoAl"],
-                        Caparra = (decimal)reader["Caparra"],
-                        Tariffa = (decimal)reader["Tariffa"],
-                        Dettagli = (string)reader["Dettagli"],
-                        CodiceFiscaleCliente = (string)reader["CodiceFiscaleCliente"],
-                        NumeroCamera = (int)reader["NumeroCamera"],
-                        ServiziPrenotati = serviziPrenotati
-                    };
-                }
-
-                reader.Close();
-
-                //creo query per selezionare i servizi prenotati associati alla prenotazione
-
-                cmd = new SqlCommand("SELECT * FROM ServiziPrenotati WHERE IDPrenotazione = @IDPrenotazione", connection);
-                cmd.Parameters.AddWithValue("@IDPrenotazione", id);
-                reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    //creo oggetto serviziPrenotati e lo popolo con i dati del reader
-                    var servizioPrenotato = new ServizioPrenotato
-                    {
-                        Data = (DateTime)reader["Data"],
-                        Quantita = (int)reader["Quantita"],
-                        Prezzo = (decimal)reader["Prezzo"],
-                        IDPrenotazione = (int)reader["IDPrenotazione"]
-                    };
-
-                    serviziPrenotati.Add(servizioPrenotato);
-                    importoTotale += servizioPrenotato.Quantita * servizioPrenotato.Prezzo; //calcolo importo totale
-                }
-
-                importoTotale += prenotazione.Tariffa - prenotazione.Caparra; //aggiungo tariffa e sottraggo caparra
-            }
-            catch (Exception e)
+        if (reader.Read())
+        {
+            //creo oggetto prenotazione e lo popolo con i dati del reader
+            prenotazione = new Prenotazione
             {
-                Console.WriteLine(e.Message);
-                return Content("Si è verificato un errore: " + e.Message);
-            }
-            finally
-            {
-                connection.Close();
-            }
-
-            if (prenotazione == null)
-            {
-                return HttpNotFound();
-            }
-            //passo i dati alla view tramite ViewBag 
-            ViewBag.ImportoTotale = importoTotale;
-            ViewBag.ServiziPrenotati = serviziPrenotati;
-
-            //ritorno la view con i dati della prenotazione e i servizi prenotati associati 
-            return View(prenotazione);
+                DataPrenotazione = (DateTime)reader["DataPrenotazione"],
+                NumeroProgressivo = (int)reader["NumeroProgressivo"],
+                Anno = (int)reader["Anno"],
+                PeriodoSoggiornoDal = (DateTime)reader["PeriodoSoggiornoDal"],
+                PeriodoSoggiornoAl = (DateTime)reader["PeriodoSoggiornoAl"],
+                Caparra = (decimal)reader["Caparra"],
+                Tariffa = (decimal)reader["Tariffa"],
+                Dettagli = (string)reader["Dettagli"],
+                CodiceFiscaleCliente = (string)reader["CodiceFiscaleCliente"],
+                NumeroCamera = (int)reader["NumeroCamera"],
+                ServiziPrenotati = serviziPrenotati
+            };
         }
+
+        reader.Close();
+
+        //creo query per selezionare i servizi prenotati associati alla prenotazione
+
+        cmd = new SqlCommand("SELECT sp.*, s.Descrizione FROM ServiziPrenotati sp JOIN Servizi s ON sp.IDServizio = s.ID WHERE sp.IDPrenotazione = @IDPrenotazione", connection);
+        cmd.Parameters.AddWithValue("@IDPrenotazione", id);
+        reader = cmd.ExecuteReader();
+
+        while (reader.Read())
+        {
+            //creo oggetto serviziPrenotati e lo popolo con i dati del reader
+            var servizioPrenotato = new ServizioPrenotato
+            {
+                Data = (DateTime)reader["Data"],
+                Quantita = (int)reader["Quantita"],
+                Prezzo = (decimal)reader["Prezzo"],
+                IDPrenotazione = (int)reader["IDPrenotazione"],
+                IDServizio = (int)reader["IDServizio"],
+                Servizio = new Servizio
+                {
+                    Descrizione = (string)reader["Descrizione"]
+                }
+            };
+
+            serviziPrenotati.Add(servizioPrenotato);
+            importoTotale += servizioPrenotato.Quantita * servizioPrenotato.Prezzo; //calcolo importo totale
+        }
+
+        importoTotale += prenotazione.Tariffa - prenotazione.Caparra; //aggiungo tariffa e sottraggo caparra
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine(e.Message);
+        return Content("Si è verificato un errore: " + e.Message);
+    }
+    finally
+    {
+        connection.Close();
+    }
+
+    if (prenotazione == null)
+    {
+        return HttpNotFound();
+    }
+    //passo i dati alla view tramite ViewBag 
+    ViewBag.ImportoTotale = importoTotale;
+    ViewBag.ServiziPrenotati = serviziPrenotati;
+
+    //ritorno la view con i dati della prenotazione e i servizi prenotati associati 
+    return View(prenotazione);
+}
+
 
 
         // GET: Prenotazioni/Delete/5
@@ -368,8 +377,8 @@ namespace Hotel.Controllers
             try
             {
                 connection.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Prenotazioni WHERE NumeroProgressivo = @NumeroProgressivo", connection);
-                cmd.Parameters.AddWithValue("@NumeroProgressivo", id);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Prenotazioni WHERE ID = @ID", connection);
+                cmd.Parameters.AddWithValue("@ID", id);
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 if (reader.Read())
@@ -407,7 +416,7 @@ namespace Hotel.Controllers
             return View(prenotazione);
         }
 
-        // POST: Prenotazioni/Delete/5
+        // POST: Prenotazioni/Delete/5 - 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
@@ -417,14 +426,29 @@ namespace Hotel.Controllers
             try
             {
                 connection.Open();
-                SqlCommand cmd = new SqlCommand("DELETE FROM Prenotazioni WHERE NumeroProgressivo = @NumeroProgressivo", connection);
-                cmd.Parameters.AddWithValue("@NumeroProgressivo", id);
-                cmd.ExecuteNonQuery();
+
+                // Prima elimino tutti i servizi prenotati associati alla prenotazione
+                SqlCommand cmd = new SqlCommand("DELETE FROM ServiziPrenotati WHERE IdPrenotazione = @IdPrenotazione", connection);
+                cmd.Parameters.AddWithValue("@IdPrenotazione", id); // assumendo che 'id' sia l'ID della prenotazione
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+                Console.WriteLine($"Eliminati {rowsAffected} servizi prenotati.");
+
+                // Poi elimino la prenotazione
+                cmd = new SqlCommand("DELETE FROM Prenotazioni WHERE ID = @ID", connection);
+                cmd.Parameters.AddWithValue("@ID", id);
+                rowsAffected = cmd.ExecuteNonQuery();
+                Console.WriteLine($"Eliminata {rowsAffected} prenotazione.");
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine("SQL Error: " + e.Message);
+                return Content("Si è verificato un errore SQL: " + e.Message);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                return Content("Si è verificato un errore: " + e.Message);
+                Console.WriteLine("General Error: " + e.Message);
+                return Content("Si è verificato un errore generale: " + e.Message);
             }
             finally
             {
@@ -433,6 +457,9 @@ namespace Hotel.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+
 
         //********************************** CALCOLO TOTALE + SERVIZI ************************************//
         //(aggiunta servizi/associazione servizi-prenotazione in ServiziController)

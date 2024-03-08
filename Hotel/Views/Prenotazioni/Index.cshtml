@@ -39,9 +39,9 @@
             <td>@Html.DisplayFor(modelItem => item.CodiceFiscaleCliente)</td>
             <td>@Html.DisplayFor(modelItem => item.NumeroCamera)</td>
             <td>
-                @Html.ActionLink("Modifica", "Edit", new { id = item.NumeroProgressivo }, new { @class = "btn btn-warning my-2" }) 
-                @Html.ActionLink("Dettagli", "Details", new { id = item.NumeroProgressivo }, new { @class = "btn btn-info mb-2" } ) 
-                @Html.ActionLink("Cancella", "Delete", new { id = item.NumeroProgressivo }, new { @class = "btn btn-danger" } ) 
+                @Html.ActionLink("Modifica", "Edit", new { id = item.ID }, new { @class = "btn btn-warning my-2" })
+                @Html.ActionLink("Dettagli", "Details", new { id = item.ID }, new { @class = "btn btn-info mb-2" })
+                @Html.ActionLink("Cancella", "Delete", new { id = item.ID }, new { @class = "btn btn-danger" })
             </td>
         </tr>
     }

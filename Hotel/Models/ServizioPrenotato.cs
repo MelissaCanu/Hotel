@@ -25,5 +25,7 @@ namespace Hotel.Models
 
         public int IDPrenotazione { get; set; }
         public int IDServizio { get; set; }
+
+        public Servizio Servizio { get; set; } //aggiungo la proprietà Servizio per avere l'intero oggetto servizio
     }
 }
