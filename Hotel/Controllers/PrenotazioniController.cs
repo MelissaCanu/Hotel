@@ -64,56 +64,56 @@ namespace Hotel.Controllers
 
         // GET: Prenotazioni/AggiungiPrenotazione
         public ActionResult AggiungiPrenotazione()
-{
-    ViewBag.DettagliOptions = new List<string> // creo lista di opzioni per il campo Dettagli 
+        {
+            ViewBag.DettagliOptions = new List<string> // creo lista di opzioni per il campo Dettagli 
     {
         "Mezza pensione",
         "Pensione completa",
         "Pernottamento con prima colazione"
     };
 
-    ViewBag.AnnoOptions = Enumerable.Range(2024, 76).ToList(); // creo lista di anni da 2024 a 2100 per il campo Anno
+            ViewBag.AnnoOptions = Enumerable.Range(2024, 76).ToList(); // creo lista di anni da 2024 a 2100 per il campo Anno
 
-    // Creo una lista per contenere i servizi
-    List<Servizio> servizi = new List<Servizio>();
+            // Creo una lista per contenere i servizi
+            List<Servizio> servizi = new List<Servizio>();
 
-   
-    string connectionString = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString.ToString();
-    using (SqlConnection con = new SqlConnection(connectionString))
-    {
-        
-        using (SqlCommand cmd = new SqlCommand("SELECT * FROM Servizi", con))
-        {
-          
-            con.Open();
 
-          
-            using (SqlDataReader rdr = cmd.ExecuteReader())
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString.ToString();
+            using (SqlConnection con = new SqlConnection(connectionString))
             {
-      
-                while (rdr.Read())
-                {
-                    // Creo un nuovo oggetto Servizio per ogni riga
-                    Servizio servizio = new Servizio
-                    {
-                        ID = Convert.ToInt32(rdr["ID"]),
-                        Descrizione = rdr["Descrizione"].ToString(),
-                        Prezzo = Convert.ToDecimal(rdr["Prezzo"])
-                    };
 
-                    // Aggiungo l'oggetto Servizio alla lista
-                    servizi.Add(servizio);
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Servizi", con))
+                {
+
+                    con.Open();
+
+
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+
+                        while (rdr.Read())
+                        {
+                            // Creo un nuovo oggetto Servizio per ogni riga
+                            Servizio servizio = new Servizio
+                            {
+                                ID = Convert.ToInt32(rdr["ID"]),
+                                Descrizione = rdr["Descrizione"].ToString(),
+                                Prezzo = Convert.ToDecimal(rdr["Prezzo"])
+                            };
+
+                            // Aggiungo l'oggetto Servizio alla lista
+                            servizi.Add(servizio);
+                        }
+                    }
                 }
             }
+
+            // Passo la lista di servizi alla vista
+            ViewBag.Servizi = servizi;
+
+            // Ritorno la vista con un nuovo modello Prenotazione
+            return View(new Prenotazione());
         }
-    }
-
-    // Passo la lista di servizi alla vista
-    ViewBag.Servizi = servizi;
-
-    // Ritorno la vista con un nuovo modello Prenotazione
-    return View(new Prenotazione());
-}
 
         // POST: Prenotazioni/AggiungiPrenotazione + aggiunta servizi prenotati 
         [HttpPost]
@@ -153,9 +153,9 @@ namespace Hotel.Controllers
                         "VALUES (@Data, @Quantita, @Prezzo, @IDPrenotazione, @IDServizio)",
                         connection);
 
-                    cmd.Parameters.AddWithValue("@Data", DateTime.Now); 
-                    cmd.Parameters.AddWithValue("@Quantita", 1); 
-                    cmd.Parameters.AddWithValue("@Prezzo", 100); 
+                    cmd.Parameters.AddWithValue("@Data", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@Quantita", 1);
+                    cmd.Parameters.AddWithValue("@Prezzo", 100);
                     cmd.Parameters.AddWithValue("@IDPrenotazione", idPrenotazione);
                     cmd.Parameters.AddWithValue("@IDServizio", idServizio);
 
@@ -279,21 +279,20 @@ namespace Hotel.Controllers
             string connectionString = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString.ToString();
             SqlConnection connection = new SqlConnection(connectionString);
 
-            //inizializzo prenotazione e importototale a null, creo lista serviziprenotati
-            Prenotazione prenotazione = null;
+            Prenotazione prenotazione = new Prenotazione();
             List<ServizioPrenotato> serviziPrenotati = new List<ServizioPrenotato>();
             decimal importoTotale = 0;
 
             try
             {
                 connection.Open();
-                
+
                 SqlCommand cmd = new SqlCommand("SELECT * FROM Prenotazioni WHERE NumeroProgressivo = @NumeroProgressivo", connection);
-                cmd.Parameters.AddWithValue("@NumeroProgressivo", id); 
+                cmd.Parameters.AddWithValue("@NumeroProgressivo", id);
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 if (reader.Read())
-                {   
+                {
                     //creo oggetto prenotazione e lo popolo con i dati del reader
                     prenotazione = new Prenotazione
                     {
@@ -306,7 +305,8 @@ namespace Hotel.Controllers
                         Tariffa = (decimal)reader["Tariffa"],
                         Dettagli = (string)reader["Dettagli"],
                         CodiceFiscaleCliente = (string)reader["CodiceFiscaleCliente"],
-                        NumeroCamera = (int)reader["NumeroCamera"]
+                        NumeroCamera = (int)reader["NumeroCamera"],
+                        ServiziPrenotati = serviziPrenotati
                     };
                 }
 
@@ -319,7 +319,7 @@ namespace Hotel.Controllers
                 reader = cmd.ExecuteReader();
 
                 while (reader.Read())
-                {   
+                {
                     //creo oggetto serviziPrenotati e lo popolo con i dati del reader
                     var servizioPrenotato = new ServizioPrenotato
                     {
@@ -447,7 +447,7 @@ namespace Hotel.Controllers
             {
                 connection.Open();
 
-        //calcolo importo totale sommando la tariffa della prenotazione, sottraendo la caparra e sommando il prezzo dei servizi prenotati
+                //calcolo importo totale sommando la tariffa della prenotazione, sottraendo la caparra e sommando il prezzo dei servizi prenotati
                 SqlCommand cmd = new SqlCommand(
                     "SELECT (Prenotazioni.Tariffa - Prenotazioni.Caparra + SUM(ServiziPrenotati.Prezzo * ServiziPrenotati.Quantita)) AS ImportoTotale " +
                     "FROM Prenotazioni INNER JOIN ServiziPrenotati ON Prenotazioni.ID = ServiziPrenotati.IDPrenotazione " +
@@ -459,7 +459,7 @@ namespace Hotel.Controllers
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 if (reader.Read())
-                {   
+                {
                     importoTotale = (decimal)reader["ImportoTotale"];
                 }
             }

@@ -75,16 +75,16 @@
             @Html.DisplayNameFor(model => model.ServiziPrenotati)
         </dt>
         <dd class="col-sm-10">
-            @if (Model.ServiziPrenotati != null)
+            @if (ViewBag.ServiziPrenotati != null)
             {
-                foreach (var servizio in Model.ServiziPrenotati)
+                foreach (var servizio in ViewBag.ServiziPrenotati)
                 {
                     <p>@servizio.Data: @servizio.Quantita x @servizio.Prezzo</p>
                 }
             }
             else //se non ci sono servizi prenotati
             {
-                <p>No services booked.</p>
+                <p>Nessun servizio prenotato.</p>
             }
         </dd>
         @*calcolo totale*@
