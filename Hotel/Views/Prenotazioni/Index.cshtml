@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Hotel.Models.Prenotazione>
+
+@{
+    ViewBag.Title = "Elenco Prenotazioni";
+}
+
+<h2>Elenco prenotazioni</h2>
+
+<p>
+    @Html.ActionLink("Aggiungi Prenotazione", "AggiungiPrenotazione")
+</p>
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.DataPrenotazione)</th>
+        <th>@Html.DisplayNameFor(model => model.NumeroProgressivo)</th>
+        <th>@Html.DisplayNameFor(model => model.Anno)</th>
+        <th>@Html.DisplayNameFor(model => model.PeriodoSoggiornoDal)</th>
+        <th>@Html.DisplayNameFor(model => model.PeriodoSoggiornoAl)</th>
+        <th>@Html.DisplayNameFor(model => model.Caparra)</th>
+        <th>@Html.DisplayNameFor(model => model.Tariffa)</th>
+        <th>@Html.DisplayNameFor(model => model.Dettagli)</th>
+        <th>@Html.DisplayNameFor(model => model.CodiceFiscaleCliente)</th>
+        <th>@Html.DisplayNameFor(model => model.NumeroCamera)</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.DataPrenotazione)</td>
+            <td>@Html.DisplayFor(modelItem => item.NumeroProgressivo)</td>
+            <td>@Html.DisplayFor(modelItem => item.Anno)</td>
+            <td>@Html.DisplayFor(modelItem => item.PeriodoSoggiornoDal)</td>
+            <td>@Html.DisplayFor(modelItem => item.PeriodoSoggiornoAl)</td>
+            <td>@Html.DisplayFor(modelItem => item.Caparra)</td>
+            <td>@Html.DisplayFor(modelItem => item.Tariffa)</td>
+            <td>@Html.DisplayFor(modelItem => item.Dettagli)</td>
+            <td>@Html.DisplayFor(modelItem => item.CodiceFiscaleCliente)</td>
+            <td>@Html.DisplayFor(modelItem => item.NumeroCamera)</td>
+            <td>
+                @Html.ActionLink("Modifica", "Edit", new { id = item.NumeroProgressivo }) |
+                @Html.ActionLink("Dettagli", "Details", new { id = item.NumeroProgressivo }) |
+                @Html.ActionLink("Cancella", "Delete", new { id = item.NumeroProgressivo })
+            </td>
+        </tr>
+    }
+</table>

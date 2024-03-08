@@ -1,0 +1,80 @@
+﻿@model Hotel.Models.Prenotazione
+
+@{
+    ViewBag.Title = "Dettagli";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Prenotazione</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DataPrenotazione)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DataPrenotazione)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NumeroProgressivo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumeroProgressivo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Anno)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Anno)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PeriodoSoggiornoDal)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PeriodoSoggiornoDal)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PeriodoSoggiornoAl)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PeriodoSoggiornoAl)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Caparra)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Caparra)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Tariffa)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Tariffa)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Dettagli)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Dettagli)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CodiceFiscaleCliente)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CodiceFiscaleCliente)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NumeroCamera)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumeroCamera)
+        </dd>
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Modifica", "Edit", new { id = Model.NumeroProgressivo }) |
+    @Html.ActionLink("Indietro", "Index")
+</p>
